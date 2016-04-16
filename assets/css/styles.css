@@ -1,5 +1,31 @@
+html, body {
+	height: 100%;
+	overflow: hidden;
+}
+
 body {
-	background: #000;
+	background: #222;
 	margin: 0;
 	padding: 0;
+	position: relative;
+}
+
+canvas {
+	left: 50%;
+	position: absolute;
+	top: 50%;
+
+	-webkit-transform: translate(-50%, -50%);
+	-ms-transform: translate(-50%, -50%);
+	transform: translate(-50%, -50%);
+
+	/* http://stackoverflow.com/questions/14068103/disable-antialising-when-scaling-images */
+	image-rendering: optimizeSpeed;
+	image-rendering: -moz-crisp-edges;
+	image-rendering: -o-crisp-edges;
+	image-rendering: -webkit-optimize-contrast;
+	image-rendering: pixelated;
+	image-rendering: optimize-contrast;
+	-ms-interpolation-mode: nearest-neighbor;
+
 }
