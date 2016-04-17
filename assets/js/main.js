@@ -40,8 +40,6 @@
 	var PLAYER_JUMP_SPEED = 180;
 	var PLAYER_GRAVITY_ACCELERATION = 400;
 	var PLAYER_MAX_FALL_SPEED = 180;
-	var PLAYER_
-
 
 
 //////////////////////////////////////////////////
@@ -215,8 +213,9 @@
 		}
 
 		player.currentAnimation = 'idle';
+		player.onGround = true;
 		player.x = (LEVELS[level].player[0] * GRID_WIDTH) + (GRID_WIDTH / 2);
-		player.y = (LEVELS[level].player[1] * GRID_HEIGHT) + (GRID_HEIGHT / 2);
+		player.y = (LEVELS[level].player[1] * GRID_HEIGHT) + GRID_HEIGHT - (PLAYER_HITAREA_HEIGHT / 2);
 		player.velocity.x = 0;
 		player.velocity.y = 0;
 		player.scaleX = 1;
@@ -234,6 +233,7 @@
 	function update(event) {
 
 		var deltaTime = event.delta / 1000;
+		deltaTime = Math.clamp(deltaTime, 0, 0.05);
 
 		// 1. update enemies
 
@@ -250,9 +250,6 @@
 	}
 	function updatePlayer(deltaTime) {
 
-		// remember current animation
-		var animation = player.currentAnimation;
-
 		// get direction
 		var dirX = 0;
 		dirX += leftKeyHeld ? -1 : 0;
@@ -264,24 +261,21 @@
 
 		// start jumping?
 		if (jumpKeyHeld && player.onGround) {
-			animation = 'jump';
+			jumpKeyHeld = false;
+			createjs.Sound.play('jump');
 			player.velocity.y = -PLAYER_JUMP_SPEED;
-		} if (dirX !== 0) {
-			animation = 'walk';
-		} else {
-			animation = 'idle';
 		}
 
 		// update x position
 		player.x += player.velocity.x * deltaTime;
 		if (player.x < PLAYER_HITAREA_WIDTH / 2) {
+			dirX = 0;
 			player.x = PLAYER_HITAREA_WIDTH / 2;
 			player.velocity.x = 0;
-			animation = (animation === 'walk') ? 'idle' : animation;
 		} else if (player.x > (LEVELS[currentLevel].map[0].length * GRID_WIDTH) - (PLAYER_HITAREA_WIDTH / 2)) {
+			dirX = 0;
 			player.x = (LEVELS[currentLevel].map[0].length * GRID_WIDTH) - (PLAYER_HITAREA_WIDTH / 2);
 			player.velocity.x = 0;
-			animation = (animation === 'walk') ? 'idle' : animation;
 		}
 		updateTileCollision(player, dirX, 0, PLAYER_HITAREA_WIDTH, PLAYER_HITAREA_HEIGHT);
 
@@ -291,27 +285,42 @@
 		dirY = (player.velocity.y > 0) ? 1 : dirY;
 		player.y += player.velocity.y * deltaTime;
 		if (player.y < PLAYER_HITAREA_HEIGHT / 2) {
+			dirY = 0;
 			player.y = PLAYER_HITAREA_HEIGHT / 2;
 			player.velocity.y = 0;
-			//animation = (animation === 'walk') ? 'idle' : animation;
 		} else if (player.y > (LEVELS[currentLevel].map.length * GRID_HEIGHT) - (PLAYER_HITAREA_HEIGHT / 2)) {
+			dirY = 0;
 			player.y = (LEVELS[currentLevel].map.length * GRID_HEIGHT) - (PLAYER_HITAREA_HEIGHT / 2);
 			player.velocity.y = 0;
-			animation = 'fall';
 		}
-		//player.y = Math.clamp(player.y, PLAYER_HITAREA_HEIGHT / 2, (LEVELS[currentLevel].map.length * GRID_HEIGHT) - (PLAYER_HITAREA_HEIGHT / 2));
 		updateTileCollision(player, 0, dirY, PLAYER_HITAREA_WIDTH, PLAYER_HITAREA_HEIGHT);
 
 		// on ground?
-		player.onGround = isSolidTileAt(player.x, player.y + (PLAYER_HITAREA_WIDTH / 2));
+		var wasOnGround = player.onGround;
+		player.onGround = isSolidTileAt(player.x - (PLAYER_HITAREA_WIDTH / 2) + 1, player.y + (PLAYER_HITAREA_HEIGHT / 2)) || isSolidTileAt(player.x + (PLAYER_HITAREA_WIDTH / 2) - 1, player.y + (PLAYER_HITAREA_HEIGHT / 2));
+		if (wasOnGround === false && player.onGround) {
+			createjs.Sound.play('hit');
+		}
 
 		// update flipping
 		player.scaleX = (dirX < 0) ? -1 : player.scaleX;
 		player.scaleX = (dirX > 0) ? 1 : player.scaleX;
 
-		//animation = 'fall';
-
 		// update animation
+		var animation = player.currentAnimation;
+		if (player.onGround) {
+			if (dirX !== 0) {
+				animation = 'walk';
+			} else {
+				animation = 'idle';
+			}
+		} else {
+			if (dirY < 0) {
+				animation = 'jump';
+			} else {
+				animation = 'fall';
+			}
+		}
 		if (animation !== player.currentAnimation) {
 			player.currentAnimation = animation;
 			player.gotoAndPlay(animation);
@@ -365,6 +374,9 @@
 	function isSolidTileAt(x, y) {
 		var col = Math.floor(x / GRID_WIDTH);
 		var row = Math.floor(y / GRID_HEIGHT);
+		if (LEVELS[currentLevel].map[row] === undefined || LEVELS[currentLevel].map[row][col] === undefined) {
+			return false;
+		}
 		var tile = LEVELS[currentLevel].map[row][col];
 		return (tile > 0) ? true : false;
 	}
