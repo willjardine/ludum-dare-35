@@ -19,15 +19,15 @@
 	var LEVELS = [
 		{
 			map: [
-				[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-				[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-				[0, 0, 0, 0, 0, 0, 1, 1, 1, 0],
-				[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-				[0, 0, 1, 1, 1, 0, 0, 0, 0, 0],
-				[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-				[0, 0, 0, 0, 0, 0, 1, 1, 1, 1],
-				[1, 1, 0, 0, 1, 1, 1, 1, 1, 1],
-				[1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+				[00, 00, 00, 00, 00, 00, 00, 00, 00, 00],
+				[00, 00, 00, 00, 00, 00, 00, 00, 00, 00],
+				[00, 00, 00, 00, 00, 00, 17, 17, 17, 00],
+				[00, 00, 00, 00, 00, 00, 00, 00, 00, 00],
+				[00, 00, 17, 17, 17, 00, 00, 00, 00, 01],
+				[02, 00, 00, 00, 00, 00, 00, 06, 00, 04],
+				[05, 00, 00, 00, 07, 09, 10, 11, 11, 11],
+				[11, 12, 07, 09, 10, 11, 16, 14, 14, 14],
+				[14, 18, 11, 11, 16, 14, 14, 14, 14, 14],
 			],
 			player: [1, 6]
 		}
@@ -40,6 +40,8 @@
 	var PLAYER_JUMP_SPEED = 180;
 	var PLAYER_GRAVITY_ACCELERATION = 400;
 	var PLAYER_MAX_FALL_SPEED = 180;
+
+	var SOLID_TILES_START_AT = 10;
 
 
 //////////////////////////////////////////////////
@@ -155,7 +157,7 @@
 		var tilesSpriteSheetAnimations = {};
 		var tilesSpriteSheetTotalFrames = 18;
 		for (var i=0; i<18; ++i) {
-			tilesSpriteSheetAnimations['tile-'+i] = i;
+			tilesSpriteSheetAnimations['tile-'+(i+1)] = i;
 		}
 		tilesSpriteSheet = new createjs.SpriteSheet({
 			framerate: 1,
@@ -203,8 +205,8 @@
 		var map = LEVELS[level].map;
 		for (var y=0; y<map.length; ++y) {
 			for (var x=0; x<map[y].length; ++x) {
-				if (parseInt(map[y][x]) == 1) {
-					var tile = new createjs.Sprite(tilesSpriteSheet, 'tile-16');
+				if (parseInt(map[y][x]) > 0) {
+					var tile = new createjs.Sprite(tilesSpriteSheet, 'tile-' + map[y][x]);
 					tile.x = getTileX(x);
 					tile.y = getTileY(y);
 					room.addChild(tile);
@@ -378,7 +380,7 @@
 			return false;
 		}
 		var tile = LEVELS[currentLevel].map[row][col];
-		return (tile > 0) ? true : false;
+		return (tile >= SOLID_TILES_START_AT) ? true : false;
 	}
 	function getTileCol(x) {
 		return Math.floor(x / GRID_WIDTH);
