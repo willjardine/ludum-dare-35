@@ -19,6 +19,27 @@
 	var LEVELS = [
 		{
 			map: [
+				[00, 00, 00, 00, 00, 00, 00, 00, 00, 00],
+				[00, 00, 00, 00, 00, 00, 00, 00, 00, 00],
+				[00, 00, 00, 00, 00, 00, 00, 00, 00, 00],
+				[00, 00, 00, 00, 00, 00, 00, 00, 00, 00],
+				[00, 00, 00, 00, 00, 00, 00, 00, 03, 00],
+				[00, 00, 00, 00, 00, 00, 00, 10, 11, 11],
+				[00, 00, 00, 00, 00, 00, 10, 16, 14, 14],
+				[11, 12, 00, 00, 00, 10, 16, 14, 14, 14],
+				[14, 18, 11, 11, 11, 16, 14, 14, 14, 14],
+			],
+			coin: [8, 3],
+			enemies: [
+				{type:'spikes', x:2, y:7},
+				{type:'spikes', x:3, y:7},
+				{type:'spikes', x:4, y:7},
+				//{type:'spikes', minX:0, maxX:0, minY:7, maxY:7}
+			],
+			player: [1, 6]
+		},
+		{
+			map: [
 				[00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00],
 				[00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00],
 				[00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00],
@@ -33,8 +54,9 @@
 				[11, 12, 07, 09, 10, 11, 16, 14, 14, 14, 14, 14, 18, 11, 11, 11, 11, 11, 11, 11],
 				[14, 18, 11, 11, 16, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14],
 			],
-			player: [1, 10],
-			coin: [18, 9]
+			coin: [18, 9],
+			enemies: [],
+			player: [1, 10]
 		},
 		{
 			map: [
@@ -48,8 +70,9 @@
 				[11, 12, 07, 09, 10, 11, 16, 14, 14, 14],
 				[14, 18, 11, 11, 16, 14, 14, 14, 14, 14],
 			],
-			player: [1, 6],
-			coin: [8, 4]
+			coin: [8, 4],
+			enemies: [],
+			player: [1, 6]
 		}
 	];
 
@@ -57,6 +80,7 @@
 	var PLAYER_HITAREA_HEIGHT = 12;
 	var PLAYER_HITAREA_RADIUS = 6;
 	var COIN_HITAREA_RADIUS = 6;
+	var ENEMY_HITAREA_RADIUS = 6;
 
 	var PLAYER_MOVE_SPEED = 64;
 	var PLAYER_JUMP_SPEED = 180;
@@ -77,6 +101,8 @@
 	var currentLevel = 0;
 	var cameraMaxX, cameraMaxY;
 	var playerIsActive = false;
+
+	var enemies = [];
 
 	var jumpKeyHeld = false;
 	var leftKeyHeld = false;
@@ -134,7 +160,9 @@
 			{id:'tiles',		src:'assets/img/tiles.gif'},
 			// sounds
 			//{id:'music',		src:'assets/snd/music.ogg'},
+			{id:'explosion',	src:'assets/snd/fx-explosion.ogg'},
 			{id:'hit',			src:'assets/snd/fx-hit.ogg'},
+			{id:'hurt',			src:'assets/snd/fx-hurt.ogg'},
 			{id:'jump',			src:'assets/snd/fx-jump.ogg'},
 			{id:'pickup',		src:'assets/snd/fx-pickup.ogg'},
 			{id:'powerup',		src:'assets/snd/fx-powerup.ogg'}
@@ -177,7 +205,9 @@
 					frames: [15, 16, 17, 18],
 					speed: 0.7
 				},
-				empty: 19
+				empty: 19,
+				bird: [20, 23],
+				spikes: 24
 			}
 		});
 
@@ -228,6 +258,7 @@
 
 	function changeLevel(level) {
 
+		enemies = [];
 		room.removeAllChildren();
 		room.x = room.y = 0;
 		jumpKeyHeld = leftKeyHeld = rightKeyHeld = false;
@@ -250,6 +281,15 @@
 					room.addChild(tile);
 				}
 			}
+		}
+
+		var baddies = LEVELS[level].enemies;
+		for (var i=0; i<baddies.length; ++i) {
+			var enemy = new createjs.Sprite(spriteSheet, baddies[i].type);
+			enemy.x = (baddies[i].x * GRID_WIDTH) + (GRID_WIDTH / 2);
+			enemy.y = (baddies[i].y * GRID_HEIGHT) + (GRID_HEIGHT / 2);
+			room.addChild(enemy);
+			enemies.push(enemy);
 		}
 
 		cameraMaxX = (map[0].length * GRID_WIDTH) - GAME_WIDTH;
@@ -287,11 +327,8 @@
 		// 1. update enemies
 
 		if (playerIsActive) {
-
 			updatePlayer(deltaTime);
-
-			// 3. check for enemy/player collisions
-
+			updateEnemyPlayerCollisions();
 			updateCoinPlayerCollisions();
 			updateCamera();
 		}
@@ -377,14 +414,28 @@
 		}
 
 	}
+	function updateEnemyPlayerCollisions() {
+		for (var i=0; i<enemies.length; ++i) {
+			if (playerIsActive && checkSpriteCollision(player, enemies[i], PLAYER_HITAREA_RADIUS, ENEMY_HITAREA_RADIUS)) {
+				playerIsActive = false;
+				player.gotoAndPlay('hurt');
+				createjs.Sound.play('hurt', {volume:0.1});
+				setTimeout(function(){
+					changeLevel(currentLevel);
+					createjs.Sound.play('explosion', {volume:0.1});
+				}, 500);
+			}
+		}
+	}
 	function updateCoinPlayerCollisions() {
-		if (checkSpriteCollision(player, coin, PLAYER_HITAREA_RADIUS, COIN_HITAREA_RADIUS)) {
+		if (playerIsActive && checkSpriteCollision(player, coin, PLAYER_HITAREA_RADIUS, COIN_HITAREA_RADIUS)) {
 			playerIsActive = false;
 			coin.gotoAndPlay('boom');
 			player.gotoAndPlay('boom');
-			createjs.Sound.play('powerup', {volume:0.1});
+			createjs.Sound.play('pickup', {volume:0.1});
 			setTimeout(function(){
 				changeLevel(currentLevel + 1);
+				createjs.Sound.play('powerup', {volume:0.1});
 			}, 1000);
 		}
 	}
@@ -484,8 +535,8 @@
 
 	function handleClick() {
 		canvas.onclick = null;
-		createjs.Sound.play('powerup', {volume:0.1});
 		changeLevel(0);
+		createjs.Sound.play('powerup', {volume:0.1});
 		return false;
 	}
 	function handleKeyDown(event) {
