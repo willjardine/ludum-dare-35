@@ -17,22 +17,24 @@
 	var KEYCODE_D = 68;
 
 	var LEVELS = [
-		/*
 		{
 			map: [
 				[00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00],
 				[00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00],
-				[00, 00, 00, 00, 00, 00, 17, 17, 17, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00],
 				[00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00],
-				[00, 00, 17, 17, 17, 00, 00, 00, 00, 01, 02, 00, 00, 00, 00, 00, 00, 00, 00, 00],
-				[02, 00, 00, 00, 00, 00, 00, 06, 00, 04, 05, 00, 00, 00, 00, 00, 00, 00, 00, 00],
-				[05, 00, 00, 00, 07, 09, 10, 11, 11, 11, 11, 11, 02, 07, 08, 08, 08, 08, 09, 00],
-				[11, 12, 07, 09, 10, 11, 16, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14],
+				[00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 17, 17, 17, 00, 00, 00],
+				[00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 17],
+				[00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 17, 17, 00, 00, 00, 00, 00, 00, 00],
+				[00, 00, 00, 00, 00, 00, 17, 17, 17, 00, 00, 00, 00, 00, 00, 00, 00, 17, 17, 00],
+				[00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00],
+				[00, 00, 17, 17, 17, 00, 00, 00, 00, 01, 02, 00, 00, 00, 17, 17, 00, 00, 00, 00],
+				[02, 00, 00, 00, 00, 00, 00, 06, 06, 04, 05, 06, 06, 00, 00, 00, 00, 00, 00, 00],
+				[05, 00, 00, 00, 07, 09, 10, 11, 11, 11, 11, 11, 12, 07, 08, 08, 09, 00, 03, 00],
+				[11, 12, 07, 09, 10, 11, 16, 14, 14, 14, 14, 14, 18, 11, 11, 11, 11, 11, 11, 11],
 				[14, 18, 11, 11, 16, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14],
 			],
-			player: [1, 6]
+			player: [1, 10]
 		},
-		*/
 		{
 			map: [
 				[00, 00, 00, 00, 00, 00, 00, 00, 00, 00],
@@ -69,6 +71,7 @@
 	var background, fpsLabel, player, room;
 
 	var currentLevel = 0;
+	var cameraMaxX, cameraMaxY;
 
 	var jumpKeyHeld = false;
 	var leftKeyHeld = false;
@@ -127,11 +130,11 @@
 			{id:'spikes',		src:'assets/img/spikes.gif'},
 			{id:'tiles',		src:'assets/img/tiles.gif'},
 			// sounds
+			//{id:'music',		src:'assets/snd/music.ogg'},
 			{id:'hit',			src:'assets/snd/fx-hit.ogg'},
 			{id:'jump',			src:'assets/snd/fx-jump.ogg'},
 			{id:'pickup',		src:'assets/snd/fx-pickup.ogg'},
-			{id:'powerup',		src:'assets/snd/fx-powerup.ogg'},
-			{id:'music',		src:'assets/snd/music.ogg'}
+			{id:'powerup',		src:'assets/snd/fx-powerup.ogg'}
 		];
 		createjs.Sound.alternateExtensions = ['mp3', 'wav'];
 		preload = new createjs.LoadQueue(true);
@@ -194,7 +197,7 @@
 		changeLevel(0);
 
 		// play music
-		createjs.Sound.play('music', {interrupt:createjs.Sound.INTERRUPT_NONE, loop:-1, volume:0.01});
+		//createjs.Sound.play('music', {interrupt:createjs.Sound.INTERRUPT_NONE, loop:-1, volume:0.01});
 
 		// start game loop
 		createjs.Ticker.timingMode = createjs.Ticker.RAF;
@@ -215,6 +218,7 @@
 	function changeLevel(level) {
 
 		room.removeAllChildren();
+		room.x = room.y = 0;
 		jumpKeyHeld = leftKeyHeld = rightKeyHeld = false;
 		currentLevel = level;
 
@@ -229,6 +233,9 @@
 				}
 			}
 		}
+
+		cameraMaxX = (map[0].length * GRID_WIDTH) - GAME_WIDTH;
+		cameraMaxY = (map.length * GRID_HEIGHT) - GAME_HEIGHT;
 
 		player.currentAnimation = 'idle';
 		player.onGround = true;
@@ -261,7 +268,7 @@
 
 		// 4. check for item/player collisions
 
-		// 5. update camera
+		updateCamera();
 
 		fpsLabel.text = Math.round(createjs.Ticker.getMeasuredFPS()) + ' fps';
 		stage.update(event);
@@ -344,6 +351,14 @@
 			player.gotoAndPlay(animation);
 		}
 
+	}
+	function updateCamera() {
+		var x = player.x - (GAME_WIDTH * 0.4);
+		var y = player.y - (GAME_HEIGHT / 2);
+		x = Math.clamp(x, 0, cameraMaxX);
+		y = Math.clamp(y, 0, cameraMaxY);
+		room.x = -x;
+		room.y = -y;
 	}
 
 
