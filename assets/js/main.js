@@ -100,6 +100,7 @@
 	var canvas, manifest, preload, stage;
 	var spriteSheet, tilesSheet;
 	var background, coin, fpsLabel, player, room;
+	var outro, outro1, outro2, outro3;
 
 	var currentLevel = 0;
 	var cameraMaxX, cameraMaxY;
@@ -160,6 +161,9 @@
 		manifest = [
 			// images
 			{id:'background',	src:'assets/img/background.gif'},
+			{id:'outro-1',		src:'assets/img/outro-1.gif'},
+			{id:'outro-2',		src:'assets/img/outro-2.gif'},
+			{id:'outro-3',		src:'assets/img/outro-3.gif'},
 			{id:'sprites',		src:'assets/img/sprites.gif'},
 			{id:'tiles',		src:'assets/img/tiles.gif'},
 			// sounds
@@ -240,6 +244,15 @@
 		// room
 		room = new createjs.Container();
 		stage.addChild(room);
+
+		// outro
+		outro = new createjs.Container();
+		outro1 = new createjs.Bitmap( preload.getResult('outro-1') );
+		outro2 = new createjs.Bitmap( preload.getResult('outro-2') );
+		outro3 = new createjs.Bitmap( preload.getResult('outro-3') );
+		stage.addChild(outro);
+
+		// load first level
 		changeLevel(0);
 
 		// play music
@@ -264,13 +277,22 @@
 
 		enemies = [];
 		movingEnemies = [];
+		outro.removeAllChildren();
 		room.removeAllChildren();
 		room.x = room.y = 0;
 		jumpKeyHeld = leftKeyHeld = rightKeyHeld = false;
 
 		if (level >= LEVELS.length) {
-			canvas.onclick = handleClick;
-			console.log('TO-DO: play "game completed" cutscene');
+			outro.addChild(outro1);
+			setTimeout(function(){
+				outro.addChild(outro2);
+				createjs.Sound.play('pickup', {volume:0.1});
+				setTimeout(function(){
+					outro.addChild(outro3);
+					canvas.onclick = handleClick;
+					createjs.Sound.play('jump', {volume:0.1});
+				}, 1000);
+			}, 1000);
 			return;
 		}
 
