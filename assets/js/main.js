@@ -16,6 +16,8 @@
 	var KEYCODE_A = 65;
 	var KEYCODE_D = 68;
 
+	var BIRD_MOVE_SPEED = 32;
+
 	var LEVELS = [
 		{
 			map: [
@@ -31,10 +33,11 @@
 			],
 			coin: [8, 3],
 			enemies: [
-				{type:'spikes', x:2, y:7},
-				{type:'spikes', x:3, y:7},
-				{type:'spikes', x:4, y:7},
-				//{type:'spikes', minX:0, maxX:0, minY:7, maxY:7}
+				{type:'spikes', x:2, y:7, rangeX:0, rangeY:0, speed:0},
+				{type:'spikes', x:3, y:7, rangeX:0, rangeY:0, speed:0},
+				{type:'spikes', x:4, y:7, rangeX:0, rangeY:0, speed:0},
+				{type:'bird', x:0, y:3, rangeX:5, rangeY:0, speed:BIRD_MOVE_SPEED},
+				{type:'bird', x:7, y:0, rangeX:0, rangeY:4, speed:BIRD_MOVE_SPEED}
 			],
 			player: [1, 6]
 		},
@@ -103,6 +106,7 @@
 	var playerIsActive = false;
 
 	var enemies = [];
+	var movingEnemies = [];
 
 	var jumpKeyHeld = false;
 	var leftKeyHeld = false;
@@ -259,6 +263,7 @@
 	function changeLevel(level) {
 
 		enemies = [];
+		movingEnemies = [];
 		room.removeAllChildren();
 		room.x = room.y = 0;
 		jumpKeyHeld = leftKeyHeld = rightKeyHeld = false;
@@ -290,6 +295,26 @@
 			enemy.y = (baddies[i].y * GRID_HEIGHT) + (GRID_HEIGHT / 2);
 			room.addChild(enemy);
 			enemies.push(enemy);
+			if (baddies[i].speed !== 0) {
+
+				enemy.minX = enemy.x;
+				enemy.minY = enemy.y;
+				enemy.x += (baddies[i].rangeX * GRID_WIDTH);
+				enemy.y += (baddies[i].rangeY * GRID_HEIGHT);
+				enemy.maxX = enemy.x;
+				enemy.maxY = enemy.y;
+
+				enemy.velocity = {x:0, y:0};
+				if (baddies[i].rangeX !== 0) {
+					enemy.velocity.x = baddies[i].speed;
+				}
+				if (baddies[i].rangeY !== 0) {
+					enemy.velocity.y = baddies[i].speed;
+				}
+				enemy.scaleX = -1;
+
+				movingEnemies.push(enemy);
+			}
 		}
 
 		cameraMaxX = (map[0].length * GRID_WIDTH) - GAME_WIDTH;
@@ -324,14 +349,14 @@
 		var deltaTime = event.delta / 1000;
 		deltaTime = Math.clamp(deltaTime, 0, 0.05);
 
-		// 1. update enemies
-
+		updateEnemies(deltaTime);
 		if (playerIsActive) {
 			updatePlayer(deltaTime);
 			updateEnemyPlayerCollisions();
 			updateCoinPlayerCollisions();
 			updateCamera();
 		}
+
 		fpsLabel.text = Math.round(createjs.Ticker.getMeasuredFPS()) + ' fps';
 		stage.update(event);
 	}
@@ -413,6 +438,28 @@
 			player.gotoAndPlay(animation);
 		}
 
+	}
+	function updateEnemies(deltaTime) {
+		for (var i=0; i<movingEnemies.length; ++i) {
+			movingEnemies[i].x += movingEnemies[i].velocity.x * deltaTime;
+			movingEnemies[i].y += movingEnemies[i].velocity.y * deltaTime;
+			if (movingEnemies[i].x < movingEnemies[i].minX) {
+				movingEnemies[i].x = movingEnemies[i].minX;
+				movingEnemies[i].velocity.x *= -1;
+				movingEnemies[i].scaleX = 1;
+			} else if (movingEnemies[i].x > movingEnemies[i].maxX) {
+				movingEnemies[i].x = movingEnemies[i].maxX;
+				movingEnemies[i].velocity.x *= -1;
+				movingEnemies[i].scaleX = -1;
+			}
+			if (movingEnemies[i].y < movingEnemies[i].minY) {
+				movingEnemies[i].y = movingEnemies[i].minY;
+				movingEnemies[i].velocity.y *= -1;
+			} else if (movingEnemies[i].y > movingEnemies[i].maxY) {
+				movingEnemies[i].y = movingEnemies[i].maxY;
+				movingEnemies[i].velocity.y *= -1;
+			}
+		}
 	}
 	function updateEnemyPlayerCollisions() {
 		for (var i=0; i<enemies.length; ++i) {
