@@ -17,6 +17,22 @@
 	var KEYCODE_D = 68;
 
 	var LEVELS = [
+		/*
+		{
+			map: [
+				[00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00],
+				[00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00],
+				[00, 00, 00, 00, 00, 00, 17, 17, 17, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00],
+				[00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00],
+				[00, 00, 17, 17, 17, 00, 00, 00, 00, 01, 02, 00, 00, 00, 00, 00, 00, 00, 00, 00],
+				[02, 00, 00, 00, 00, 00, 00, 06, 00, 04, 05, 00, 00, 00, 00, 00, 00, 00, 00, 00],
+				[05, 00, 00, 00, 07, 09, 10, 11, 11, 11, 11, 11, 02, 07, 08, 08, 08, 08, 09, 00],
+				[11, 12, 07, 09, 10, 11, 16, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14],
+				[14, 18, 11, 11, 16, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14],
+			],
+			player: [1, 6]
+		},
+		*/
 		{
 			map: [
 				[00, 00, 00, 00, 00, 00, 00, 00, 00, 00],
@@ -178,7 +194,7 @@
 		changeLevel(0);
 
 		// play music
-		//createjs.Sound.play('music', {interrupt:createjs.Sound.INTERRUPT_NONE, loop:-1, volume:0.4});
+		createjs.Sound.play('music', {interrupt:createjs.Sound.INTERRUPT_NONE, loop:-1, volume:0.01});
 
 		// start game loop
 		createjs.Ticker.timingMode = createjs.Ticker.RAF;
@@ -264,7 +280,7 @@
 		// start jumping?
 		if (jumpKeyHeld && player.onGround) {
 			jumpKeyHeld = false;
-			createjs.Sound.play('jump');
+			createjs.Sound.play('jump', {volume:0.1});
 			player.velocity.y = -PLAYER_JUMP_SPEED;
 		}
 
@@ -301,7 +317,7 @@
 		var wasOnGround = player.onGround;
 		player.onGround = isSolidTileAt(player.x - (PLAYER_HITAREA_WIDTH / 2) + 1, player.y + (PLAYER_HITAREA_HEIGHT / 2)) || isSolidTileAt(player.x + (PLAYER_HITAREA_WIDTH / 2) - 1, player.y + (PLAYER_HITAREA_HEIGHT / 2));
 		if (wasOnGround === false && player.onGround) {
-			createjs.Sound.play('hit');
+			createjs.Sound.play('hit', {volume:0.1});
 		}
 
 		// update flipping
@@ -402,7 +418,7 @@
 
 	function handleClick() {
 		canvas.onclick = null;
-		createjs.Sound.play('powerup');
+		createjs.Sound.play('powerup', {volume:0.1});
 		return false;
 	}
 	function handleKeyDown(event) {
