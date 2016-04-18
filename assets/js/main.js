@@ -169,7 +169,7 @@
 			{id:'sprites',		src:'assets/img/sprites.gif'},
 			{id:'tiles',		src:'assets/img/tiles.gif'},
 			// sounds
-			//{id:'music',		src:'assets/snd/music.ogg'},
+			{id:'music',		src:'assets/snd/music.ogg'},
 			{id:'explosion',	src:'assets/snd/fx-explosion.ogg'},
 			{id:'hit',			src:'assets/snd/fx-hit.ogg'},
 			{id:'hurt',			src:'assets/snd/fx-hurt.ogg'},
@@ -191,8 +191,8 @@
 		stage.addChild(background);
 
 		// fps label
-		fpsLabel = new createjs.Text('', '24px Arial', '#000');
-		fpsLabel.x = 4;
+		fpsLabel = new createjs.Text('', '12px Arial', '#000');
+		fpsLabel.x = 3;
 		fpsLabel.y = 0;
 		stage.addChild(fpsLabel);
 
@@ -261,9 +261,6 @@
 		// load first level
 		changeLevel(0);
 
-		// play music
-		//createjs.Sound.play('music', {interrupt:createjs.Sound.INTERRUPT_NONE, loop:-1, volume:0.01});
-
 		// start game loop
 		createjs.Ticker.timingMode = createjs.Ticker.RAF;
 		createjs.Ticker.addEventListener('tick', update);
@@ -289,6 +286,7 @@
 		jumpKeyHeld = leftKeyHeld = rightKeyHeld = false;
 
 		if (level >= LEVELS.length) {
+			createjs.Sound.stop();
 			outro.addChild(outro1);
 			createjs.Sound.play('hit', {volume:0.1});
 			setTimeout(function(){
@@ -300,7 +298,7 @@
 					setTimeout(function(){
 						outro.addChild(outro4);
 						canvas.onclick = handleClick;
-						createjs.Sound.play('hit', {volume:0.1});
+						createjs.Sound.play('powerup', {volume:0.1});
 					}, 1500);
 				}, 1500);
 			}, 1500);
@@ -371,6 +369,7 @@
 
 		if (level === 0) {
 			room.addChild(logo);
+			createjs.Sound.play('music', {interrupt:createjs.Sound.INTERRUPT_NONE, loop:-1, volume:0.1});
 		}
 
 		stage.update();
@@ -620,7 +619,6 @@
 	function handleClick() {
 		canvas.onclick = null;
 		changeLevel(0);
-		createjs.Sound.play('powerup', {volume:0.1});
 		return false;
 	}
 	function handleKeyDown(event) {
