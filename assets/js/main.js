@@ -19,6 +19,8 @@
 	var BIRD_MOVE_SPEED = 32;
 
 	var LEVELS = [
+
+		// TUTORIALS
 		{
 			map: [
 				[00, 00, 00, 00, 00, 00, 00, 00, 00, 00],
@@ -35,6 +37,167 @@
 			enemies: [],
 			player: [1, 7]
 		},
+		{
+			map: [
+				[00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00],
+				[00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00],
+				[00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00],
+				[00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00],
+				[00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00],
+				[00, 00, 00, 00, 06, 06, 00, 06, 06, 00, 00, 06, 06, 00, 00, 00, 00, 00, 03, 00],
+				[00, 00, 00, 00, 10, 12, 00, 10, 12, 00, 00, 10, 12, 00, 00, 00, 10, 11, 11, 11],
+				[11, 11, 11, 11, 16, 18, 11, 16, 18, 11, 11, 16, 18, 11, 11, 11, 16, 14, 14, 14],
+				[14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14]
+			],
+			coin: [18, 4],
+			enemies: [
+				{type:'spikes', x:6, y:6, rangeX:0, rangeY:0, speed:0},
+				{type:'spikes', x:9, y:6, rangeX:0, rangeY:0, speed:0},
+				{type:'spikes', x:10, y:6, rangeX:0, rangeY:0, speed:0},
+				{type:'spikes', x:13, y:6, rangeX:0, rangeY:0, speed:0},
+				{type:'spikes', x:14, y:6, rangeX:0, rangeY:0, speed:0},
+				{type:'spikes', x:15, y:6, rangeX:0, rangeY:0, speed:0}
+			],
+			player: [1, 6]
+		},
+		{
+			map: [
+				[00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00],
+				[00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00],
+				[00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00],
+				[00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00],
+				[00, 17, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00],
+				[00, 00, 00, 00, 00, 00, 06, 00, 06, 00, 06, 00, 06, 00, 00, 00, 00, 00, 00, 00],
+				[06, 00, 06, 00, 06, 00, 10, 11, 11, 11, 11, 11, 12, 00, 06, 00, 06, 00, 03, 00],
+				[11, 11, 11, 11, 11, 11, 16, 14, 14, 14, 14, 14, 18, 11, 11, 11, 11, 11, 11, 11],
+				[14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14]
+			],
+			coin: [18, 5],
+			enemies: [
+				{type:'bird', x:0, y:6, rangeX:5, rangeY:0, speed:BIRD_MOVE_SPEED},
+				{type:'bird', x:6, y:5, rangeX:6, rangeY:0, speed:BIRD_MOVE_SPEED},
+				{type:'bird', x:13, y:6, rangeX:4, rangeY:0, speed:BIRD_MOVE_SPEED}
+			],
+			player: [1, 3]
+		},
+
+		// MODERATE
+		{
+			map: [
+				[00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00],
+				[00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00],
+				[00, 00, 00, 17, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 17, 17, 17, 00],
+				[00, 00, 00, 00, 00, 17, 17, 17, 00, 00, 17, 17, 17, 00, 00, 00, 17, 17, 00, 00, 00],
+				[00, 17, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 17, 00, 00, 00],
+				[00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 17, 00, 17, 17],
+				[00, 00, 17, 17, 17, 00, 00, 00, 00, 00, 00, 17, 17, 17, 00, 00, 00, 17, 00, 00, 00],
+				[00, 00, 00, 00, 00, 00, 17, 17, 17, 17, 00, 00, 00, 00, 00, 00, 10, 12, 00, 00, 00],
+				[00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 10, 16, 15, 17, 17, 00],
+				[00, 00, 00, 00, 00, 00, 00, 00, 00, 01, 02, 00, 00, 00, 10, 16, 14, 15, 00, 00, 00],
+				[02, 00, 00, 00, 00, 00, 00, 06, 06, 04, 05, 06, 06, 10, 16, 14, 14, 15, 00, 00, 00],
+				[05, 00, 00, 00, 00, 06, 06, 10, 11, 11, 11, 11, 11, 16, 14, 14, 14, 15, 00, 03, 00],
+				[11, 12, 07, 08, 09, 10, 11, 16, 14, 14, 14, 14, 14, 14, 14, 14, 14, 18, 11, 11, 11],
+				[14, 18, 11, 11, 11, 16, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14]
+			],
+			coin: [19, 10],
+			enemies: [
+				{type:'bird', x:4, y:2, rangeX:5, rangeY:0, speed:BIRD_MOVE_SPEED},
+				{type:'bird', x:5, y:6, rangeX:5, rangeY:0, speed:BIRD_MOVE_SPEED},
+			],
+			player: [1, 11]
+		},
+
+		// HARD
+		{
+			map: [
+				[00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00],
+				[00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00],
+				[00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00],
+				[00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00],
+				[00, 00, 00, 00, 00, 00, 00, 00, 00, 01, 02, 00, 00, 00, 00, 00, 00, 00, 00, 00],
+				[00, 00, 00, 00, 00, 00, 00, 06, 06, 04, 05, 06, 06, 00, 00, 00, 00, 00, 00, 00],
+				[08, 09, 00, 00, 00, 07, 09, 10, 11, 11, 11, 11, 12, 00, 07, 08, 09, 00, 03, 00],
+				[11, 12, 00, 00, 00, 10, 11, 16, 14, 14, 14, 14, 15, 00, 10, 11, 11, 11, 11, 11],
+				[14, 18, 11, 11, 11, 16, 14, 14, 14, 14, 14, 14, 18, 11, 16, 14, 14, 14, 14, 14]
+			],
+			coin: [18, 5],
+			enemies: [
+				{type:'spikes', x:2, y:7, rangeX:0, rangeY:0, speed:0},
+				{type:'spikes', x:3, y:7, rangeX:0, rangeY:0, speed:0},
+				{type:'spikes', x:4, y:7, rangeX:0, rangeY:0, speed:0},
+				{type:'bird', x:7, y:4, rangeX:5, rangeY:0, speed:BIRD_MOVE_SPEED},
+				{type:'bird', x:7, y:5, rangeX:5, rangeY:0, speed:BIRD_MOVE_SPEED},
+				{type:'bird', x:13, y:3, rangeX:0, rangeY:4, speed:BIRD_MOVE_SPEED*1.5}
+			],
+			player: [1, 6]
+		},
+		{
+			map: [
+				[00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00],
+				[00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00],
+				[00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00],
+				[00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 17, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00],
+				[00, 00, 00, 00, 00, 00, 00, 00, 10, 12, 00, 00, 00, 17, 00, 00, 00, 17, 17, 00, 00, 00, 17, 00, 00, 00, 00, 00, 00, 00],
+				[00, 00, 00, 00, 00, 00, 10, 11, 16, 15, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 03, 00],
+				[00, 00, 00, 00, 10, 11, 16, 14, 14, 15, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 10, 11, 11],
+				[11, 11, 11, 11, 16, 14, 14, 14, 14, 18, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 16, 14, 14],
+				[14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14]
+			],
+			coin: [28, 4],
+			enemies: [
+				{type:'spikes', x:10, y:6, rangeX:0, rangeY:0, speed:0},
+				{type:'spikes', x:11, y:6, rangeX:0, rangeY:0, speed:0},
+				{type:'spikes', x:12, y:6, rangeX:0, rangeY:0, speed:0},
+				{type:'spikes', x:13, y:6, rangeX:0, rangeY:0, speed:0},
+				{type:'spikes', x:14, y:6, rangeX:0, rangeY:0, speed:0},
+				{type:'spikes', x:15, y:6, rangeX:0, rangeY:0, speed:0},
+				{type:'spikes', x:16, y:6, rangeX:0, rangeY:0, speed:0},
+				{type:'spikes', x:17, y:6, rangeX:0, rangeY:0, speed:0},
+				{type:'spikes', x:18, y:6, rangeX:0, rangeY:0, speed:0},
+				{type:'spikes', x:19, y:6, rangeX:0, rangeY:0, speed:0},
+				{type:'spikes', x:20, y:6, rangeX:0, rangeY:0, speed:0},
+				{type:'spikes', x:21, y:6, rangeX:0, rangeY:0, speed:0},
+				{type:'spikes', x:22, y:6, rangeX:0, rangeY:0, speed:0},
+				{type:'spikes', x:23, y:6, rangeX:0, rangeY:0, speed:0},
+				{type:'spikes', x:24, y:6, rangeX:0, rangeY:0, speed:0},
+				{type:'spikes', x:25, y:6, rangeX:0, rangeY:0, speed:0},
+				{type:'spikes', x:26, y:6, rangeX:0, rangeY:0, speed:0},
+				{type:'bird', x:11, y:1, rangeX:0, rangeY:3, speed:BIRD_MOVE_SPEED},
+				{type:'bird', x:15, y:0, rangeX:0, rangeY:4, speed:BIRD_MOVE_SPEED},
+				{type:'bird', x:20, y:0, rangeX:0, rangeY:3, speed:BIRD_MOVE_SPEED},
+				{type:'bird', x:25, y:4, rangeX:0, rangeY:0, speed:0}
+			],
+			player: [1, 7]
+		},
+		{
+			map: [
+				[00, 00, 00, 00, 00, 00, 00, 00, 00, 00],
+				[00, 00, 00, 00, 00, 00, 00, 00, 00, 00],
+				[00, 00, 00, 00, 00, 17, 00, 10, 12, 00],
+				[00, 00, 00, 00, 00, 00, 00, 13, 15, 00],
+				[00, 00, 00, 17, 00, 00, 00, 13, 15, 00],
+				[00, 00, 00, 00, 00, 00, 00, 13, 15, 00],
+				[00, 17, 00, 00, 00, 00, 00, 13, 15, 00],
+				[00, 00, 00, 00, 00, 00, 00, 13, 15, 00],
+				[00, 00, 00, 00, 17, 00, 00, 13, 15, 00],
+				[00, 00, 00, 00, 00, 00, 00, 13, 15, 00],
+				[00, 17, 00, 00, 00, 00, 00, 13, 15, 00],
+				[00, 00, 00, 17, 00, 00, 00, 13, 15, 00],
+				[00, 00, 00, 00, 00, 00, 00, 13, 15, 00],
+				[00, 00, 00, 00, 00, 00, 10, 16, 15, 03],
+				[00, 00, 00, 00, 00, 10, 16, 14, 18, 11],
+				[11, 11, 11, 11, 11, 16, 14, 14, 14, 14]
+			],
+			coin: [9, 12],
+			enemies: [
+				{type:'bird', x:0, y:4, rangeX:2, rangeY:0, speed:BIRD_MOVE_SPEED},
+				{type:'bird', x:0, y:8, rangeX:3, rangeY:0, speed:BIRD_MOVE_SPEED}
+			],
+			player: [1, 14]
+		}
+
+		/*
+		// JUNK
 		{
 			map: [
 				[00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00],
@@ -77,7 +240,11 @@
 			],
 			player: [1, 6]
 		}
+		*/
 	];
+
+	var MUSIC_VOLUME = 0.2;
+	var SFX_VOLUME = 0.1;
 
 	var PLAYER_HITAREA_WIDTH = 12;
 	var PLAYER_HITAREA_HEIGHT = 12;
@@ -288,17 +455,17 @@
 		if (level >= LEVELS.length) {
 			createjs.Sound.stop();
 			outro.addChild(outro1);
-			createjs.Sound.play('hit', {volume:0.1});
+			createjs.Sound.play('hit', {volume:SFX_VOLUME});
 			setTimeout(function(){
 				outro.addChild(outro2);
-				createjs.Sound.play('hit', {volume:0.1});
+				createjs.Sound.play('hit', {volume:SFX_VOLUME});
 				setTimeout(function(){
 					outro.addChild(outro3);
-					createjs.Sound.play('pickup', {volume:0.1});
+					createjs.Sound.play('pickup', {volume:SFX_VOLUME});
 					setTimeout(function(){
 						outro.addChild(outro4);
 						canvas.onclick = handleClick;
-						createjs.Sound.play('powerup', {volume:0.1});
+						createjs.Sound.play('powerup', {volume:SFX_VOLUME});
 					}, 1500);
 				}, 1500);
 			}, 1500);
@@ -326,6 +493,11 @@
 			enemy.y = (baddies[i].y * GRID_HEIGHT) + (GRID_HEIGHT / 2);
 			room.addChild(enemy);
 			enemies.push(enemy);
+
+			if (baddies[i].type !== 'spikes') {
+				enemy.scaleX = -1;
+			}
+
 			if (baddies[i].speed !== 0) {
 
 				enemy.minX = enemy.x;
@@ -342,7 +514,6 @@
 				if (baddies[i].rangeY !== 0) {
 					enemy.velocity.y = baddies[i].speed;
 				}
-				enemy.scaleX = -1;
 
 				movingEnemies.push(enemy);
 			}
@@ -369,7 +540,7 @@
 
 		if (level === 0) {
 			room.addChild(logo);
-			createjs.Sound.play('music', {interrupt:createjs.Sound.INTERRUPT_NONE, loop:-1, volume:0.1});
+			createjs.Sound.play('music', {interrupt:createjs.Sound.INTERRUPT_NONE, loop:-1, volume:MUSIC_VOLUME});
 		}
 
 		stage.update();
@@ -410,7 +581,7 @@
 		// start jumping?
 		if (jumpKeyHeld && player.onGround) {
 			jumpKeyHeld = false;
-			createjs.Sound.play('jump', {volume:0.1});
+			createjs.Sound.play('jump', {volume:SFX_VOLUME});
 			player.velocity.y = -PLAYER_JUMP_SPEED;
 		}
 
@@ -447,7 +618,7 @@
 		var wasOnGround = player.onGround;
 		player.onGround = isSolidTileAt(player.x - (PLAYER_HITAREA_WIDTH / 2) + 1, player.y + (PLAYER_HITAREA_HEIGHT / 2)) || isSolidTileAt(player.x + (PLAYER_HITAREA_WIDTH / 2) - 1, player.y + (PLAYER_HITAREA_HEIGHT / 2));
 		if (wasOnGround === false && player.onGround) {
-			createjs.Sound.play('hit', {volume:0.1});
+			createjs.Sound.play('hit', {volume:SFX_VOLUME});
 		}
 
 		// update flipping
@@ -502,10 +673,10 @@
 			if (playerIsActive && checkSpriteCollision(player, enemies[i], PLAYER_HITAREA_RADIUS, ENEMY_HITAREA_RADIUS)) {
 				playerIsActive = false;
 				player.gotoAndPlay('hurt');
-				createjs.Sound.play('hurt', {volume:0.1});
+				createjs.Sound.play('hurt', {volume:SFX_VOLUME});
 				setTimeout(function(){
 					changeLevel(currentLevel);
-					createjs.Sound.play('explosion', {volume:0.1});
+					createjs.Sound.play('explosion', {volume:SFX_VOLUME});
 				}, 500);
 			}
 		}
@@ -515,10 +686,10 @@
 			playerIsActive = false;
 			coin.gotoAndPlay('boom');
 			player.gotoAndPlay('boom');
-			createjs.Sound.play('pickup', {volume:0.1});
+			createjs.Sound.play('pickup', {volume:SFX_VOLUME});
 			setTimeout(function(){
 				changeLevel(currentLevel + 1);
-				createjs.Sound.play('powerup', {volume:0.1});
+				createjs.Sound.play('powerup', {volume:SFX_VOLUME});
 			}, 1000);
 		}
 	}
