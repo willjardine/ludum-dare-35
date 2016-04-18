@@ -25,21 +25,15 @@
 				[00, 00, 00, 00, 00, 00, 00, 00, 00, 00],
 				[00, 00, 00, 00, 00, 00, 00, 00, 00, 00],
 				[00, 00, 00, 00, 00, 00, 00, 00, 00, 00],
-				[00, 00, 00, 00, 00, 00, 00, 00, 03, 00],
-				[00, 00, 00, 00, 00, 00, 00, 10, 11, 11],
-				[00, 00, 00, 00, 00, 00, 10, 16, 14, 14],
-				[11, 12, 00, 00, 00, 10, 16, 14, 14, 14],
-				[14, 18, 11, 11, 11, 16, 14, 14, 14, 14],
+				[00, 00, 00, 00, 00, 00, 00, 00, 00, 00],
+				[00, 00, 00, 00, 00, 00, 00, 00, 00, 00],
+				[00, 00, 00, 00, 00, 00, 00, 03, 00, 00],
+				[00, 00, 00, 00, 00, 10, 11, 11, 11, 11],
+				[11, 11, 11, 11, 11, 16, 14, 14, 14, 14]
 			],
-			coin: [8, 3],
-			enemies: [
-				{type:'spikes', x:2, y:7, rangeX:0, rangeY:0, speed:0},
-				{type:'spikes', x:3, y:7, rangeX:0, rangeY:0, speed:0},
-				{type:'spikes', x:4, y:7, rangeX:0, rangeY:0, speed:0},
-				{type:'bird', x:0, y:3, rangeX:5, rangeY:0, speed:BIRD_MOVE_SPEED},
-				{type:'bird', x:7, y:0, rangeX:0, rangeY:4, speed:BIRD_MOVE_SPEED}
-			],
-			player: [1, 6]
+			coin: [7, 5],
+			enemies: [],
+			player: [1, 7]
 		},
 		{
 			map: [
@@ -55,7 +49,7 @@
 				[02, 00, 00, 00, 00, 00, 00, 06, 06, 04, 05, 06, 06, 00, 00, 00, 00, 00, 00, 00],
 				[05, 00, 00, 00, 07, 09, 10, 11, 11, 11, 11, 11, 12, 07, 08, 08, 09, 00, 03, 00],
 				[11, 12, 07, 09, 10, 11, 16, 14, 14, 14, 14, 14, 18, 11, 11, 11, 11, 11, 11, 11],
-				[14, 18, 11, 11, 16, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14],
+				[14, 18, 11, 11, 16, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14]
 			],
 			coin: [18, 9],
 			enemies: [],
@@ -65,16 +59,22 @@
 			map: [
 				[00, 00, 00, 00, 00, 00, 00, 00, 00, 00],
 				[00, 00, 00, 00, 00, 00, 00, 00, 00, 00],
-				[00, 00, 00, 00, 00, 00, 17, 17, 17, 00],
 				[00, 00, 00, 00, 00, 00, 00, 00, 00, 00],
-				[00, 00, 17, 17, 17, 00, 00, 00, 00, 01],
-				[02, 00, 00, 00, 00, 00, 00, 00, 03, 04],
-				[05, 00, 00, 00, 07, 09, 10, 11, 11, 11],
-				[11, 12, 07, 09, 10, 11, 16, 14, 14, 14],
-				[14, 18, 11, 11, 16, 14, 14, 14, 14, 14],
+				[00, 00, 00, 00, 00, 00, 00, 00, 00, 00],
+				[00, 00, 00, 00, 00, 00, 00, 00, 03, 00],
+				[00, 00, 00, 00, 00, 00, 00, 10, 11, 11],
+				[00, 00, 00, 00, 00, 00, 10, 16, 14, 14],
+				[11, 12, 00, 00, 00, 10, 16, 14, 14, 14],
+				[14, 18, 11, 11, 11, 16, 14, 14, 14, 14]
 			],
-			coin: [8, 4],
-			enemies: [],
+			coin: [8, 3],
+			enemies: [
+				{type:'spikes', x:2, y:7, rangeX:0, rangeY:0, speed:0},
+				{type:'spikes', x:3, y:7, rangeX:0, rangeY:0, speed:0},
+				{type:'spikes', x:4, y:7, rangeX:0, rangeY:0, speed:0},
+				{type:'bird', x:0, y:3, rangeX:5, rangeY:0, speed:BIRD_MOVE_SPEED},
+				{type:'bird', x:7, y:0, rangeX:0, rangeY:4, speed:BIRD_MOVE_SPEED}
+			],
 			player: [1, 6]
 		}
 	];
@@ -100,7 +100,7 @@
 	var canvas, manifest, preload, stage;
 	var spriteSheet, tilesSheet;
 	var background, coin, fpsLabel, player, room;
-	var outro, outro1, outro2, outro3;
+	var logo, outro, outro1, outro2, outro3;
 
 	var currentLevel = 0;
 	var cameraMaxX, cameraMaxY;
@@ -161,6 +161,7 @@
 		manifest = [
 			// images
 			{id:'background',	src:'assets/img/background.gif'},
+			{id:'logo',			src:'assets/img/logo.gif'},
 			{id:'outro-1',		src:'assets/img/outro-1.gif'},
 			{id:'outro-2',		src:'assets/img/outro-2.gif'},
 			{id:'outro-3',		src:'assets/img/outro-3.gif'},
@@ -244,6 +245,9 @@
 		// room
 		room = new createjs.Container();
 		stage.addChild(room);
+
+		// logo
+		logo = new createjs.Bitmap( preload.getResult('logo') );
 
 		// outro
 		outro = new createjs.Container();
@@ -357,6 +361,10 @@
 		player.scaleX = 1;
 		player.gotoAndPlay('idle');
 		room.addChild(player);
+
+		if (level === 0) {
+			room.addChild(logo);
+		}
 
 		stage.update();
 	}
