@@ -100,7 +100,7 @@
 	var canvas, manifest, preload, stage;
 	var spriteSheet, tilesSheet;
 	var background, coin, fpsLabel, player, room;
-	var logo, outro, outro1, outro2, outro3;
+	var logo, outro, outro1, outro2, outro3, outro4;
 
 	var currentLevel = 0;
 	var cameraMaxX, cameraMaxY;
@@ -165,6 +165,7 @@
 			{id:'outro-1',		src:'assets/img/outro-1.gif'},
 			{id:'outro-2',		src:'assets/img/outro-2.gif'},
 			{id:'outro-3',		src:'assets/img/outro-3.gif'},
+			{id:'outro-4',		src:'assets/img/outro-4.gif'},
 			{id:'sprites',		src:'assets/img/sprites.gif'},
 			{id:'tiles',		src:'assets/img/tiles.gif'},
 			// sounds
@@ -254,6 +255,7 @@
 		outro1 = new createjs.Bitmap( preload.getResult('outro-1') );
 		outro2 = new createjs.Bitmap( preload.getResult('outro-2') );
 		outro3 = new createjs.Bitmap( preload.getResult('outro-3') );
+		outro4 = new createjs.Bitmap( preload.getResult('outro-4') );
 		stage.addChild(outro);
 
 		// load first level
@@ -288,15 +290,20 @@
 
 		if (level >= LEVELS.length) {
 			outro.addChild(outro1);
+			createjs.Sound.play('hit', {volume:0.1});
 			setTimeout(function(){
 				outro.addChild(outro2);
-				createjs.Sound.play('pickup', {volume:0.1});
+				createjs.Sound.play('hit', {volume:0.1});
 				setTimeout(function(){
 					outro.addChild(outro3);
-					canvas.onclick = handleClick;
-					createjs.Sound.play('jump', {volume:0.1});
-				}, 1000);
-			}, 1000);
+					createjs.Sound.play('pickup', {volume:0.1});
+					setTimeout(function(){
+						outro.addChild(outro4);
+						canvas.onclick = handleClick;
+						createjs.Sound.play('hit', {volume:0.1});
+					}, 1500);
+				}, 1500);
+			}, 1500);
 			return;
 		}
 
