@@ -33,7 +33,8 @@
 				[11, 12, 07, 09, 10, 11, 16, 14, 14, 14, 14, 14, 18, 11, 11, 11, 11, 11, 11, 11],
 				[14, 18, 11, 11, 16, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14],
 			],
-			player: [1, 10]
+			player: [1, 10],
+			coin: [18, 9]
 		},
 		{
 			map: [
@@ -42,17 +43,20 @@
 				[00, 00, 00, 00, 00, 00, 17, 17, 17, 00],
 				[00, 00, 00, 00, 00, 00, 00, 00, 00, 00],
 				[00, 00, 17, 17, 17, 00, 00, 00, 00, 01],
-				[02, 00, 00, 00, 00, 00, 00, 06, 00, 04],
+				[02, 00, 00, 00, 00, 00, 00, 00, 03, 04],
 				[05, 00, 00, 00, 07, 09, 10, 11, 11, 11],
 				[11, 12, 07, 09, 10, 11, 16, 14, 14, 14],
 				[14, 18, 11, 11, 16, 14, 14, 14, 14, 14],
 			],
-			player: [1, 6]
+			player: [1, 6],
+			coin: [8, 4]
 		}
 	];
 
 	var PLAYER_HITAREA_WIDTH = 12;
 	var PLAYER_HITAREA_HEIGHT = 12;
+	var PLAYER_HITAREA_RADIUS = 6;
+	var COIN_HITAREA_RADIUS = 6;
 
 	var PLAYER_MOVE_SPEED = 64;
 	var PLAYER_JUMP_SPEED = 180;
@@ -67,11 +71,12 @@
 //////////////////////////////////////////////////
 
 	var canvas, manifest, preload, stage;
-	var playerSpriteSheet, tilesSpriteSheet;
-	var background, fpsLabel, player, room;
+	var spriteSheet, tilesSheet;
+	var background, coin, fpsLabel, player, room;
 
 	var currentLevel = 0;
 	var cameraMaxX, cameraMaxY;
+	var playerIsActive = false;
 
 	var jumpKeyHeld = false;
 	var leftKeyHeld = false;
@@ -125,9 +130,7 @@
 		manifest = [
 			// images
 			{id:'background',	src:'assets/img/background.gif'},
-			{id:'coin',			src:'assets/img/coin.gif'},
-			{id:'player',		src:'assets/img/player.gif'},
-			{id:'spikes',		src:'assets/img/spikes.gif'},
+			{id:'sprites',		src:'assets/img/sprites.gif'},
 			{id:'tiles',		src:'assets/img/tiles.gif'},
 			// sounds
 			//{id:'music',		src:'assets/snd/music.ogg'},
@@ -155,11 +158,11 @@
 		fpsLabel.y = 0;
 		stage.addChild(fpsLabel);
 
-		// player sprite sheet
-		playerSpriteSheet = new createjs.SpriteSheet({
+		// sprite sheet
+		spriteSheet = new createjs.SpriteSheet({
 			framerate: 8,
-			images: [ preload.getResult('player') ],
-			frames: {width:GRID_WIDTH, height:GRID_WIDTH, count:10, regX:GRID_WIDTH/2, regY:GRID_WIDTH/2, spacing:0, margin:0},
+			images: [ preload.getResult('sprites') ],
+			frames: {width:GRID_WIDTH, height:GRID_WIDTH, regX:GRID_WIDTH/2, regY:GRID_WIDTH/2, spacing:0, margin:0},
 			animations: {
 				idle: {
 					frames: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 3],
@@ -168,25 +171,34 @@
 				hurt: 4,
 				walk: [5, 7],
 				jump: 8,
-				fall: 9
+				fall: 9,
+				boom: [10, 14, 'empty'],
+				coin: {
+					frames: [15, 16, 17, 18],
+					speed: 0.7
+				},
+				empty: 19
 			}
 		});
 
 		// tiles sprite sheet
-		var tilesSpriteSheetAnimations = {};
-		var tilesSpriteSheetTotalFrames = 18;
+		var tilesSheetAnimations = {};
+		var tilesSheetTotalFrames = 18;
 		for (var i=0; i<18; ++i) {
-			tilesSpriteSheetAnimations['tile-'+(i+1)] = i;
+			tilesSheetAnimations['tile-'+(i+1)] = i;
 		}
-		tilesSpriteSheet = new createjs.SpriteSheet({
+		tilesSheet = new createjs.SpriteSheet({
 			framerate: 1,
 			images: [ preload.getResult('tiles') ],
-			frames: {width:GRID_WIDTH, height:GRID_WIDTH, count:tilesSpriteSheetTotalFrames, regX:0, regY:0, spacing:0, margin:0},
-			animations: tilesSpriteSheetAnimations
+			frames: {width:GRID_WIDTH, height:GRID_WIDTH, count:tilesSheetTotalFrames, regX:0, regY:0, spacing:0, margin:0},
+			animations: tilesSheetAnimations
 		});
 
+		// coin
+		coin = new createjs.Sprite(spriteSheet, 'coin');
+
 		// player
-		player = new createjs.Sprite(playerSpriteSheet, 'idle');
+		player = new createjs.Sprite(spriteSheet, 'idle');
 		player.currentAnimation = 'idle';
 		player.velocity = {x:0, y:0};
 		player.onGround = false;
@@ -204,7 +216,6 @@
 		createjs.Ticker.addEventListener('tick', update);
 
 		// register events
-		//canvas.onclick = handleClick;
 		document.onkeydown = handleKeyDown;
 		document.onkeyup = handleKeyUp;
 
@@ -220,13 +231,20 @@
 		room.removeAllChildren();
 		room.x = room.y = 0;
 		jumpKeyHeld = leftKeyHeld = rightKeyHeld = false;
+
+		if (level >= LEVELS.length) {
+			canvas.onclick = handleClick;
+			console.log('TO-DO: play "game completed" cutscene');
+			return;
+		}
+
 		currentLevel = level;
 
 		var map = LEVELS[level].map;
 		for (var y=0; y<map.length; ++y) {
 			for (var x=0; x<map[y].length; ++x) {
 				if (parseInt(map[y][x]) > 0) {
-					var tile = new createjs.Sprite(tilesSpriteSheet, 'tile-' + map[y][x]);
+					var tile = new createjs.Sprite(tilesSheet, 'tile-' + map[y][x]);
 					tile.x = getTileX(x);
 					tile.y = getTileY(y);
 					room.addChild(tile);
@@ -236,6 +254,12 @@
 
 		cameraMaxX = (map[0].length * GRID_WIDTH) - GAME_WIDTH;
 		cameraMaxY = (map.length * GRID_HEIGHT) - GAME_HEIGHT;
+		playerIsActive = true;
+
+		coin.x = (LEVELS[level].coin[0] * GRID_WIDTH) + (GRID_WIDTH / 2);
+		coin.y = (LEVELS[level].coin[1] * GRID_HEIGHT) + (GRID_HEIGHT / 2);
+		coin.gotoAndPlay('coin');
+		room.addChild(coin);
 
 		player.currentAnimation = 'idle';
 		player.onGround = true;
@@ -262,14 +286,15 @@
 
 		// 1. update enemies
 
-		updatePlayer(deltaTime);
+		if (playerIsActive) {
 
-		// 3. check for enemy/player collisions
+			updatePlayer(deltaTime);
 
-		// 4. check for item/player collisions
+			// 3. check for enemy/player collisions
 
-		updateCamera();
-
+			updateCoinPlayerCollisions();
+			updateCamera();
+		}
 		fpsLabel.text = Math.round(createjs.Ticker.getMeasuredFPS()) + ' fps';
 		stage.update(event);
 	}
@@ -352,6 +377,17 @@
 		}
 
 	}
+	function updateCoinPlayerCollisions() {
+		if (checkSpriteCollision(player, coin, PLAYER_HITAREA_RADIUS, COIN_HITAREA_RADIUS)) {
+			playerIsActive = false;
+			coin.gotoAndPlay('boom');
+			player.gotoAndPlay('boom');
+			createjs.Sound.play('powerup', {volume:0.1});
+			setTimeout(function(){
+				changeLevel(currentLevel + 1);
+			}, 1000);
+		}
+	}
 	function updateCamera() {
 		var x = player.x - (GAME_WIDTH * 0.4);
 		var y = player.y - (GAME_HEIGHT / 2);
@@ -359,6 +395,21 @@
 		y = Math.clamp(y, 0, cameraMaxY);
 		room.x = -x;
 		room.y = -y;
+	}
+
+
+//////////////////////////////////////////////////
+// CHECK COLLISIONS
+//////////////////////////////////////////////////
+
+	function checkSpriteCollision(sprite1, sprite2, radius1, radius2) {
+		var dx = sprite1.x - sprite2.x;
+		var dy = sprite1.y - sprite2.y;
+		var distance = Math.sqrt(dx * dx + dy * dy);
+		if (distance < radius1 + radius2) {
+			return true;
+		}
+		return false;
 	}
 
 
@@ -434,6 +485,7 @@
 	function handleClick() {
 		canvas.onclick = null;
 		createjs.Sound.play('powerup', {volume:0.1});
+		changeLevel(0);
 		return false;
 	}
 	function handleKeyDown(event) {
