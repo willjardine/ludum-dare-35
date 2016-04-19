@@ -2,8 +2,8 @@
 // CONSTANTS
 //////////////////////////////////////////////////
 
-	var GRID_WIDTH = 16;
-	var GRID_HEIGHT = 16;
+	var GRID_WIDTH = 32;
+	var GRID_HEIGHT = 32;
 	var GAME_WIDTH = GRID_WIDTH * 10;
 	var GAME_HEIGHT = GRID_HEIGHT * 9;
 
@@ -16,7 +16,7 @@
 	var KEYCODE_A = 65;
 	var KEYCODE_D = 68;
 
-	var BIRD_MOVE_SPEED = 32;
+	var BIRD_MOVE_SPEED = 64;
 
 	var LEVELS = [
 
@@ -66,8 +66,8 @@
 				[00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00],
 				[00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00],
 				[00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00],
-				[00, 17, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00],
-				[00, 00, 00, 00, 00, 00, 06, 00, 06, 00, 06, 00, 06, 00, 00, 00, 00, 00, 00, 00],
+				[00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00],
+				[00, 17, 00, 00, 00, 00, 06, 00, 06, 00, 06, 00, 06, 00, 00, 00, 00, 00, 00, 00],
 				[06, 00, 06, 00, 06, 00, 10, 11, 11, 11, 11, 11, 12, 00, 06, 00, 06, 00, 03, 00],
 				[11, 11, 11, 11, 11, 11, 16, 14, 14, 14, 14, 14, 18, 11, 11, 11, 11, 11, 11, 11],
 				[14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14]
@@ -78,7 +78,7 @@
 				{type:'bird', x:6, y:5, rangeX:6, rangeY:0, speed:BIRD_MOVE_SPEED},
 				{type:'bird', x:13, y:6, rangeX:4, rangeY:0, speed:BIRD_MOVE_SPEED}
 			],
-			player: [1, 3]
+			player: [1, 4]
 		},
 
 		// MODERATE
@@ -136,9 +136,9 @@
 				[00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00],
 				[00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00],
 				[00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00],
-				[00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 17, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00],
-				[00, 00, 00, 00, 00, 00, 00, 00, 10, 12, 00, 00, 00, 17, 00, 00, 00, 17, 17, 00, 00, 00, 17, 00, 00, 00, 00, 00, 00, 00],
-				[00, 00, 00, 00, 00, 00, 10, 11, 16, 15, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 03, 00],
+				[00, 00, 00, 00, 00, 00, 00, 00, 06, 00, 00, 00, 00, 00, 00, 00, 00, 00, 17, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00],
+				[00, 00, 00, 00, 00, 00, 06, 00, 10, 12, 00, 00, 00, 17, 00, 00, 00, 17, 17, 00, 00, 00, 17, 00, 00, 00, 00, 00, 00, 00],
+				[00, 00, 00, 00, 06, 00, 10, 11, 16, 15, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 03, 00],
 				[00, 00, 00, 00, 10, 11, 16, 14, 14, 15, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 10, 11, 11],
 				[11, 11, 11, 11, 16, 14, 14, 14, 14, 18, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 16, 14, 14],
 				[14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14]
@@ -184,8 +184,8 @@
 				[00, 17, 00, 00, 00, 00, 00, 13, 15, 00],
 				[00, 00, 00, 17, 00, 00, 00, 13, 15, 00],
 				[00, 00, 00, 00, 00, 00, 00, 13, 15, 00],
-				[00, 00, 00, 00, 00, 00, 10, 16, 15, 03],
-				[00, 00, 00, 00, 00, 10, 16, 14, 18, 11],
+				[02, 01, 02, 00, 00, 00, 10, 16, 15, 03],
+				[05, 04, 05, 00, 00, 10, 16, 14, 18, 11],
 				[11, 11, 11, 11, 11, 16, 14, 14, 14, 14]
 			],
 			coin: [9, 12],
@@ -196,66 +196,21 @@
 			player: [1, 14]
 		}
 
-		/*
-		// JUNK
-		{
-			map: [
-				[00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00],
-				[00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00],
-				[00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00],
-				[00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 17, 17, 17, 00, 00, 00],
-				[00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 17],
-				[00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 17, 17, 00, 00, 00, 00, 00, 00, 00],
-				[00, 00, 00, 00, 00, 00, 17, 17, 17, 00, 00, 00, 00, 00, 00, 00, 00, 17, 17, 00],
-				[00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00, 00],
-				[00, 00, 17, 17, 17, 00, 00, 00, 00, 01, 02, 00, 00, 00, 17, 17, 00, 00, 00, 00],
-				[02, 00, 00, 00, 00, 00, 00, 06, 06, 04, 05, 06, 06, 00, 00, 00, 00, 00, 00, 00],
-				[05, 00, 00, 00, 07, 09, 10, 11, 11, 11, 11, 11, 12, 07, 08, 08, 09, 00, 03, 00],
-				[11, 12, 07, 09, 10, 11, 16, 14, 14, 14, 14, 14, 18, 11, 11, 11, 11, 11, 11, 11],
-				[14, 18, 11, 11, 16, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14]
-			],
-			coin: [18, 9],
-			enemies: [],
-			player: [1, 10]
-		},
-		{
-			map: [
-				[00, 00, 00, 00, 00, 00, 00, 00, 00, 00],
-				[00, 00, 00, 00, 00, 00, 00, 00, 00, 00],
-				[00, 00, 00, 00, 00, 00, 00, 00, 00, 00],
-				[00, 00, 00, 00, 00, 00, 00, 00, 00, 00],
-				[00, 00, 00, 00, 00, 00, 00, 00, 03, 00],
-				[00, 00, 00, 00, 00, 00, 00, 10, 11, 11],
-				[00, 00, 00, 00, 00, 00, 10, 16, 14, 14],
-				[11, 12, 00, 00, 00, 10, 16, 14, 14, 14],
-				[14, 18, 11, 11, 11, 16, 14, 14, 14, 14]
-			],
-			coin: [8, 3],
-			enemies: [
-				{type:'spikes', x:2, y:7, rangeX:0, rangeY:0, speed:0},
-				{type:'spikes', x:3, y:7, rangeX:0, rangeY:0, speed:0},
-				{type:'spikes', x:4, y:7, rangeX:0, rangeY:0, speed:0},
-				{type:'bird', x:0, y:3, rangeX:5, rangeY:0, speed:BIRD_MOVE_SPEED},
-				{type:'bird', x:7, y:0, rangeX:0, rangeY:4, speed:BIRD_MOVE_SPEED}
-			],
-			player: [1, 6]
-		}
-		*/
 	];
 
 	var MUSIC_VOLUME = 0.2;
 	var SFX_VOLUME = 0.1;
 
-	var PLAYER_HITAREA_WIDTH = 12;
-	var PLAYER_HITAREA_HEIGHT = 12;
-	var PLAYER_HITAREA_RADIUS = 6;
-	var COIN_HITAREA_RADIUS = 6;
-	var ENEMY_HITAREA_RADIUS = 6;
+	var PLAYER_HITAREA_WIDTH = 24;
+	var PLAYER_HITAREA_HEIGHT = 24;
+	var PLAYER_HITAREA_RADIUS = 12;
+	var COIN_HITAREA_RADIUS = 12;
+	var ENEMY_HITAREA_RADIUS = 12;
 
-	var PLAYER_MOVE_SPEED = 64;
-	var PLAYER_JUMP_SPEED = 180;
-	var PLAYER_GRAVITY_ACCELERATION = 400;
-	var PLAYER_MAX_FALL_SPEED = 180;
+	var PLAYER_MOVE_SPEED = 128;
+	var PLAYER_JUMP_SPEED = 360;
+	var PLAYER_GRAVITY_ACCELERATION = 800;
+	var PLAYER_MAX_FALL_SPEED = 360;
 
 	var SOLID_TILES_START_AT = 10;
 
@@ -330,11 +285,8 @@
 			{id:'background',	src:'assets/img/background.gif'},
 			{id:'logo',			src:'assets/img/logo.gif'},
 			{id:'outro-1',		src:'assets/img/outro-1.gif'},
-			{id:'outro-2',		src:'assets/img/outro-2.gif'},
-			{id:'outro-3',		src:'assets/img/outro-3.gif'},
-			{id:'outro-4',		src:'assets/img/outro-4.gif'},
-			{id:'sprites',		src:'assets/img/sprites.gif'},
-			{id:'tiles',		src:'assets/img/tiles.gif'},
+			{id:'sprites',		src:'assets/img/sprites.png'},
+			{id:'tiles',		src:'assets/img/tiles.png'},
 			// sounds
 			{id:'music',		src:'assets/snd/music.ogg'},
 			{id:'explosion',	src:'assets/snd/fx-explosion.ogg'},
@@ -420,9 +372,6 @@
 		// outro
 		outro = new createjs.Container();
 		outro1 = new createjs.Bitmap( preload.getResult('outro-1') );
-		outro2 = new createjs.Bitmap( preload.getResult('outro-2') );
-		outro3 = new createjs.Bitmap( preload.getResult('outro-3') );
-		outro4 = new createjs.Bitmap( preload.getResult('outro-4') );
 		stage.addChild(outro);
 
 		// load first level
@@ -456,19 +405,7 @@
 			createjs.Sound.stop();
 			outro.addChild(outro1);
 			createjs.Sound.play('hit', {volume:SFX_VOLUME});
-			setTimeout(function(){
-				outro.addChild(outro2);
-				createjs.Sound.play('hit', {volume:SFX_VOLUME});
-				setTimeout(function(){
-					outro.addChild(outro3);
-					createjs.Sound.play('pickup', {volume:SFX_VOLUME});
-					setTimeout(function(){
-						outro.addChild(outro4);
-						canvas.onclick = handleClick;
-						createjs.Sound.play('powerup', {volume:SFX_VOLUME});
-					}, 1500);
-				}, 1500);
-			}, 1500);
+			canvas.onclick = handleClick;
 			return;
 		}
 
