@@ -313,7 +313,7 @@
 		fpsLabel = new createjs.Text('', '12px Arial', '#000');
 		fpsLabel.x = 3;
 		fpsLabel.y = 0;
-		stage.addChild(fpsLabel);
+		//stage.addChild(fpsLabel);
 
 		// sprite sheet
 		spriteSheet = new createjs.SpriteSheet({
